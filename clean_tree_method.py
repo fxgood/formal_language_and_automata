@@ -150,27 +150,44 @@ class toGreibach:
 
     def __eliminate_empty_production(self):
         for key in self.grammar:
+            if key=='S':
+                continue
             # 如果该非终结符推出空产生式
             if '#' in self.grammar[key]:
                 self.grammar[key].remove('#')
-                for other_key in self.grammar:
-                    if other_key!=key:
-                        # 检查右边的情况
-                        for right_str in self.grammar[other_key]:
-                            if len(right_str)>1 and key in right_str:
-                                #@todo 其实这里有大坑，比如BaB B是可空集合中的非终结符，那么消除空产生式有三种情况aB Ba a，目前先不考虑这种情况
-                                new_add=right_str.replace(key,'')
-                                if new_add!='' and new_add not in self.grammar[other_key]:
-                                    self.grammar[other_key].append(new_add)
+                for key_2 in self.grammar:
+                    # 检查右边的情况
+                    for right_str in self.grammar[key_2]:
+                        if len(right_str)>1 and key in right_str:
+                            #@todo 其实这里有大坑，比如BaB B是可空集合中的非终结符，那么消除空产生式有三种情况aB Ba a，目前先不考虑这种情况
+                            new_add=right_str.replace(key,'')
+                            if new_add!='' and new_add not in self.grammar[key_2]:
+                                self.grammar[key_2].append(new_add)
+
+    def __eliminate_sigle_production(self):
+        while(1):
+            finished=True
+            for key in self.grammar:
+                for right_str in self.grammar[key]:
+                    if len(right_str)==1 and right_str<='Z' and right_str>='A':
+                        finished=False
+                        self.grammar[key].remove(right_str)
+                        for el in self.grammar[right_str]:
+                            if el not in self.grammar[key]:
+                                self.grammar[key].append(el)
+            if finished:
+                break
 
     def to_greibach(self):
         # 消除无用符号
         p = CleanTree()
         p.bulid_clean_tree(p.root_node, self.grammar)
         useful_nodes=p.return_useful_nodes()
-        print(useful_nodes)
         record=[]
         for key in self.grammar:
+            for right_str in self.grammar[key]:
+                if len(right_str)==1 and right_str<='Z' and right_str>='A' and right_str not in useful_nodes:
+                    self.grammar[key].remove(right_str)
             if key not in useful_nodes:
                 record.append(key)
         for e in record:
@@ -178,7 +195,54 @@ class toGreibach:
         self.show_grammar()
         # 消除空产生式
         self.__eliminate_empty_production()
+        print('消除空产生式后:')
+        print('*'*100)
         self.show_grammar()
+        # 消除单一产生式
+        self.__eliminate_sigle_production()
+        print('消除单一产生式后:')
+        print('*' * 100)
+        self.show_grammar()
+        # 将非终结符开头转化为非终结符开头
+        while(1):
+            finished=True
+            for key in self.grammar:
+                for right_str in self.grammar[key]:
+                    if right_str=='#':
+                        continue
+                    # 由于已经消除了单一产生式，故不可能有单个非终结符
+                    first_char=right_str[0]
+                    left_part=right_str[1:]
+                    if first_char<='Z' and first_char>='A':
+                        finished=False
+                        self.grammar[key].remove(right_str)
+                        for el in self.grammar[first_char]:
+                            new_str=''.join([el,left_part])
+                            self.grammar[key].append(new_str)
+            if finished:
+                break
+        print('消除右侧非终结符开头串后:')
+        print('*' * 100)
+        self.show_grammar()
+        # 转化为Greibach范式
+        key_to_add={}
+        for key in self.grammar:
+            for index,right_str in enumerate(self.grammar[key]):
+                if len(right_str)>1:
+                    need_to_replace=[]
+                    for char in right_str[1:]:
+                        if char>='a' and char<='z':
+                            need_to_replace.append(char)
+                    for el in need_to_replace:
+                        self.grammar[key][index]=right_str[0]+self.grammar[key][index][1:].replace(el,el.upper()+'1')
+                        key_to_add[el.upper()+'1']=el
+        self.grammar.update(key_to_add)
+        print('转换为Greibach后:')
+        print('*' * 100)
+        self.show_grammar()
+
+
+
 
     def show_grammar(self):
         for key in self.grammar:
@@ -188,6 +252,8 @@ class toGreibach:
                     print('|', end='')
                 print(right, end='')
             print()
+
+
 if __name__=='__main__':
     case_1={
         'S':['0','0A','E'],
@@ -203,7 +269,12 @@ if __name__=='__main__':
         'B': ['bcB', 'Cca'],
         'C': ['cC', 'c']
     }
-    p=CleanTree()
-    p.bulid_clean_tree(p.root_node,case_2)
-    print(p.return_useful_nodes())
+    case_3={
+        'S':['aABC','a'],
+        'A':['aA','a','#'],
+        'B':['bcB','bc','C','#'],
+        'C':['cC','cb']
+    }
+    p=toGreibach(case_2)
+    p.to_greibach()
 
