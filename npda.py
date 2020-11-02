@@ -1,4 +1,5 @@
 from clean_tree_method import *
+import re
 class Rule:
     def __init__(self,read_in_state,out_state,read_char,stack_top,stack_top_replace_str):
         self.read_state=read_in_state   # 读入状态
@@ -35,27 +36,38 @@ class NPDA:
     def __recognize(self,string,read_state,stack):
         # 递归终止条件，达到终态
         if read_state=='q^2':
+            print('*'*20+'到达终态，匹配成功'+'*'*20)
             return True
         # 递归终止条件，扫描完了tape还没到达终态
         if string == '':
+            print('扫描完了tape还没到达终态，匹配失败')
             return False
         now_string=string
-        now_stack=stack
         now_read_state=read_state
         matched_rules=[]
         for rule in self.rules:
             if rule.read_state == now_read_state \
                     and rule.read_char == now_string[0] \
-                    and rule.stack_top == now_stack[0]:
+                    and rule.stack_top == stack[0]:
                 matched_rules.append(rule)
         # 递归终止条件，没到达终态的情况下，没有任何规则可以匹配
         if not matched_rules:
+            print('还未到达终态，就已没有任何规则可以匹配，匹配失败')
             return False
         result=False
         for rule in matched_rules:
+            now_stack = stack[:]
+            print('读头读到'+string[0])
+            print('状态从'+read_state+'转换到'+rule.out_state)
+            print('转换前栈的状态:',end='')
+            print(now_stack)
             del now_stack[0]
-            for e in rule.stack_top_replace_str[::-1]:
+            pattern=re.compile(r'\w\^1|\w')
+            temp_lst=re.findall(pattern,rule.stack_top_replace_str)
+            for e in temp_lst[::-1]:
                 now_stack.insert(0,e)
+            print('转换后栈的状态:',end='')
+            print(now_stack)
             result=result or self.__recognize(string[1:],rule.out_state,now_stack)
         return result
 
@@ -99,7 +111,8 @@ if __name__=='__main__':
     }
     p=toGreibach(case_4)
     p.to_greibach()
-    npda=NPDA(case_5)
+    npda=NPDA(p.grammar)
     npda.show_rules()
-    result=npda.recognize_language('aabb')
+    print('*'*100)
+    result=npda.recognize_language('aaaabbbbbb')
     print(result)
