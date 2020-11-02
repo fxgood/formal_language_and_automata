@@ -51,13 +51,13 @@ class NPDA:
         # 递归终止条件，没到达终态的情况下，没有任何规则可以匹配
         if not matched_rules:
             return False
-        if len(matched_rules)==1:
-            pass
-        else:
-            result=False
-            for rule in matched_rules:
-                result=result or self.__recognize(string[1:],now_read_state,now_stack)
-            return result
+        result=False
+        for rule in matched_rules:
+            del now_stack[0]
+            for e in rule.stack_top_replace_str[::-1]:
+                now_stack.insert(0,e)
+            result=result or self.__recognize(string[1:],rule.out_state,now_stack)
+        return result
 
     def recognize_language(self,string):
         self.tape += string
