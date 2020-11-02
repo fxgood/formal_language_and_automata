@@ -234,16 +234,12 @@ class toGreibach:
                         if char>='a' and char<='z':
                             need_to_replace.append(char)
                     for el in need_to_replace:
-                        self.grammar[key][index]=right_str[0]+self.grammar[key][index][1:].replace(el,el.upper()+'1')
-                        key_to_add[el.upper()+'1']=el
+                        self.grammar[key][index]=right_str[0]+self.grammar[key][index][1:].replace(el,el.upper()+'^1')
+                        key_to_add[el.upper()+'^1']=el
         self.grammar.update(key_to_add)
         print('转换为Greibach后:')
         print('*' * 100)
         self.show_grammar()
-
-
-
-
     def show_grammar(self):
         for key in self.grammar:
             print(key + "——>", end='')
@@ -275,6 +271,9 @@ if __name__=='__main__':
         'B':['bcB','bc','C','#'],
         'C':['cC','cb']
     }
-    p=toGreibach(case_2)
+    case_4={
+        'S':['aSbb','a']
+    }
+    p=toGreibach(case_4)
     p.to_greibach()
 
