@@ -13,7 +13,11 @@ class Rule:
 
 class NPDA:
     # 传入一个字典形式的Greibach范式
-    def __init__(self, grammar):
+    def __init__(self, input_grammar):
+        # 将输入的二型文法转换为化简后的Greibach范式
+        p=toGreibach(input_grammar)
+        p.to_greibach()
+        grammar=p.grammar
         self.tape = ['#']
         self.index = 0
         self.state = 'q^0'
@@ -29,6 +33,10 @@ class NPDA:
                     self.rules.append(Rule('q^1', 'q^1', right_str, key, '#'))
                 else:
                     self.rules.append(Rule('q^1', 'q^1', right_str[0], key, right_str[1:]))
+        print('*' * 100)
+        print('转换为PDA后，其转移规则如下：')
+        self.show_rules()
+        print('*' * 100)
 
     def show_rules(self):
         for e in self.rules:
@@ -78,6 +86,16 @@ class NPDA:
     def recognize_language(self, string):
         return self.__recognize('#'+string+'#','q^0', self.stack)
 
+    def excute(self):
+        target_str = input('请输入一个字符串：')
+        result = self.recognize_language(target_str)
+        if result:
+            print('串(' + target_str + ")识别成功,属于该文法。")
+        else:
+            print('串(' + target_str + ")识别失败,不属于该文法。")
+
+
+
 
 if __name__ == '__main__':
     case_1 = {
@@ -110,16 +128,7 @@ if __name__ == '__main__':
         'C': ['c']
     }
 
-    p = toGreibach(case_2)
-    p.to_greibach()
-    npda = NPDA(p.grammar)
-    print('*' * 100)
-    print('转换为PDA后，其转移规则如下：')
-    npda.show_rules()
-    print('*' * 100)
-    target_str = input('请输入一个字符串：')
-    result = npda.recognize_language(target_str)
-    if result:
-        print('串('+target_str + ")识别成功,属于该文法。")
-    else:
-        print('串('+target_str + ")识别失败,不属于该文法。")
+    npda = NPDA(case_4)
+    npda.excute()
+
+
