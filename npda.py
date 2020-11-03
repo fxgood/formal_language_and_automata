@@ -42,9 +42,7 @@ class NPDA:
         # 递归终止条件，扫描完了tape还没到达终态
         if string == '':
             print('扫描完了tape还没到达终态，匹配失败')
-            # print('*' * 100)
             return False
-        # print('*'*100)
         now_string = string[:]
         print('当前剩余未读的串为：'+now_string)
 
