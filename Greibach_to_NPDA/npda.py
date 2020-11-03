@@ -1,4 +1,4 @@
-from to_greibach import *
+from Greibach_to_NPDA.to_greibach import *
 import re
 
 
