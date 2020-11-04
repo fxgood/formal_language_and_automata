@@ -18,29 +18,33 @@ class Turing:
     #     Rule(1,'1',1,'1',True),
     #     Rule(1,'#',final_state,'#',False),
     # ]
+    # rules=[
+    #     Rule(0,'1',1,'a',False),    # 1
+    #     Rule(1,'1',1,'1',False),    # 2
+    #     Rule(1,'0',2,'0',False),    # 3
+    #     Rule(2,'1',3,'b',False),    # 4
+    #
+    #     Rule(3,'1',3,'1',False),    # 5
+    #     Rule(3,'0',4,'0',False),    # 6
+    #     Rule(4,'0',5,'1',False),    # 7
+    #     Rule(4,'1',4,'1',False),    # 8
+    #     Rule(5,'#',6,'0',True),    # 9
+    #     Rule(6,'0',6,'0',True),    # 10
+    #     Rule(6,'1',6,'1',True),    # 11
+    #     Rule(6,'b',2,'b',False),    # 12
+    #
+    #     Rule(2,'0',7,'0',True),    # 13
+    #     Rule(7,'b',7,'1',True),    # 14
+    #     Rule(7,'0',7,'0',True),    # 15
+    #     Rule(7,'1',7,'1',True),    # 16
+    #     Rule(7,'a',0,'a',False),    # 17
+    #     Rule(0,'0',8,'0',True),    # 18
+    #     Rule(8,'a',8,'1',True),    # 19
+    #     Rule(8,'#',final_state,'#',False),    # 20
+    # ]
+
     rules=[
-        Rule(0,'1',1,'a',False),    # 1
-        Rule(1,'1',1,'1',False),    # 2
-        Rule(1,'0',2,'0',False),    # 3
-        Rule(2,'1',3,'b',False),    # 4
-
-        Rule(3,'1',3,'1',False),    # 5
-        Rule(3,'0',4,'0',False),    # 6
-        Rule(4,'0',5,'1',False),    # 7
-        Rule(4,'1',4,'1',False),    # 8
-        Rule(5,'#',6,'0',True),    # 9
-        Rule(6,'0',6,'0',True),    # 10
-        Rule(6,'1',6,'1',True),    # 11
-        Rule(6,'b',2,'b',False),    # 12
-
-        Rule(2,'0',7,'0',True),    # 13
-        Rule(7,'b',7,'1',True),    # 14
-        Rule(7,'0',7,'0',True),    # 15
-        Rule(7,'1',7,'1',True),    # 16
-        Rule(7,'a',0,'a',False),    # 17
-        Rule(0,'0',8,'0',True),    # 18
-        Rule(8,'a',8,'1',True),    # 19
-        Rule(8,'#',final_state,'#',False),    # 20
+        Rule(0, '1', 1, 'a', False),  # 1
     ]
 
     def __init__(self):
@@ -93,6 +97,8 @@ class Turing:
                     self.tape.insert(self.cur,c)
                 if rule.next_orientation:
                     self.cur-=1
+                elif len(rule.out_content)>1:
+                    self.cur+=len(rule.out_content) 
                 else:
                     self.cur+=1
                 break
