@@ -78,7 +78,6 @@ class NPDA:
     def recognize_language(self, string):
         return self.__recognize('#'+string+'#','q^0', self.stack)
 
-
 if __name__ == '__main__':
     case_1 = {
         'S': ['0', '0A', 'E'],
@@ -123,3 +122,9 @@ if __name__ == '__main__':
         print('串('+target_str + ")识别成功,属于该文法。")
     else:
         print('串('+target_str + ")识别失败,不属于该文法。")
+
+
+
+
+
+
