@@ -279,6 +279,6 @@ if __name__=='__main__':
     case_4={
         'S':['aSbb','a']
     }
-    p=toGreibach(case_4)
+    p=toGreibach(case_2)
     p.to_greibach()
 
