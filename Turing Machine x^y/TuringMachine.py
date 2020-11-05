@@ -55,7 +55,7 @@ class Turing:
         Rule(2, '#', 3, '1#', True),
         Rule(3, '1', 3, '1', True),
         Rule(3, '0', 3, '0', True),
-        Rule(3, '$', 3, '$', True),
+        Rule(3, '$', 4, '$', True),
         Rule(4, '1', 7, '1', True),
 
         Rule(4, 'x', 5, 'x', False),
@@ -69,11 +69,14 @@ class Turing:
 
         Rule(7, '1', 7, '1', True),
         Rule(7, 'x', 8, 'x', False),
-        Rule(8, '1', 8, '1', False),
-        Rule(8, '$', 9, '$', False),
+        # Rule(8, '1', 8, '1', False),
+        Rule(8, '1', 16, 'x', False),
+        Rule(16, '1', 16, '1', False),
+        Rule(16, '$', 9, '$', False),
+        # Rule(8, '$', 9, '$', False),
         Rule(9, '1', 9, '1', False),
         Rule(9, '0', 9, '0', False),
-        Rule(9, '#', 10, '0#', True),
+        Rule(9, '#', 10, '1#', True),
         Rule(10, '0', 10, '0', True),
         Rule(10, '1', 10, '1', True),
         Rule(10, '$', 4, '$', True),
@@ -81,8 +84,11 @@ class Turing:
         Rule(11, 'x', 11, '1', True),
         Rule(11, '0', 12, '0', True),
         Rule(12, 'y', 12, 'y', True),
-        Rule(12, '1', 13, 'y', False),
-        Rule(12, '#', 14, '#', False),
+        # Rule(12, '1', 13, 'y', False),
+        Rule(12, '1', 17, 'y', True),
+        Rule(17, '1', 13, '1', False),
+        Rule(17, '#', 14, '#', False),
+        # Rule(12, '#', 14, '#', False),
         Rule(13, 'y', 13, 'y', False),
         Rule(13, '0', 1, '0', False),
 
@@ -149,6 +155,21 @@ class Turing:
         for rule in Turing.rules:
             if self.current_state==rule.read_state \
                 and self.tape[self.cur]==rule.read_char:
+                # 展示执行的rule的信息
+                if self.cur==0:
+                    print('↑')
+                    print('p'+str(self.current_state))
+                else:
+                    print('\t'*self.cur+'↑')
+                    print('\t'*self.cur+'p' + str(self.current_state))
+
+                print('执行了规则：',end='')
+                print('(p'+str(rule.read_state)+','+rule.read_char+')=(p'+str(rule.out_state)+','+rule.out_content+',',end='')
+                if rule.next_orientation:
+                    print('Left)')
+                else:
+                    print('Right)')
+                print('*'*100)
                 self.current_state=rule.out_state
                 del self.tape[self.cur]
                 for c in rule.out_content[::-1]:
@@ -173,10 +194,13 @@ class Turing:
             print(e, end='\t')
         print()
 
+
 if __name__=='__main__':
     t=Turing()
     # t.multiply(2,3)
     t.pow_x_y(2,3)
+
+
 
 
 
