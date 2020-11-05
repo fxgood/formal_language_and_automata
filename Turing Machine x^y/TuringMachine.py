@@ -1,13 +1,14 @@
 class Rule:
-    def __init__(self,read_state,read_char,out_state,out_content,next_orientation):
-        self.read_state=read_state
-        self.read_char=read_char
-        self.out_state=out_state
-        self.out_content=out_content
-        self.next_orientation=next_orientation  # True往左，False往右
+    def __init__(self, read_state, read_char, out_state, out_content, next_orientation):
+        self.read_state = read_state
+        self.read_char = read_char
+        self.out_state = out_state
+        self.out_content = out_content
+        self.next_orientation = next_orientation  # True往左，False往右
+
 
 class Turing:
-    final_state=15
+    final_state = 100
     # 复制只有1组成的字符串
     # rules=[
     #     Rule(0,'1',0,'x',False),
@@ -45,7 +46,8 @@ class Turing:
     # ]
 
     # 实现pow(x,y)
-    rules={
+    rules = {
+        # 第一阶段，将x^y转换为x*x*x*x
         Rule(0, '1', 0, '1', False),
         Rule(0, '0', 1, '0', False),
         Rule(1, '1', 2, 'x', False),
@@ -69,11 +71,9 @@ class Turing:
 
         Rule(7, '1', 7, '1', True),
         Rule(7, 'x', 8, 'x', False),
-        # Rule(8, '1', 8, '1', False),
         Rule(8, '1', 16, 'x', False),
         Rule(16, '1', 16, '1', False),
         Rule(16, '$', 9, '$', False),
-        # Rule(8, '$', 9, '$', False),
         Rule(9, '1', 9, '1', False),
         Rule(9, '0', 9, '0', False),
         Rule(9, '#', 10, '1#', True),
@@ -84,29 +84,81 @@ class Turing:
         Rule(11, 'x', 11, '1', True),
         Rule(11, '0', 12, '0', True),
         Rule(12, 'y', 12, 'y', True),
-        # Rule(12, '1', 13, 'y', False),
         Rule(12, '1', 17, 'y', True),
         Rule(17, '1', 13, '1', False),
         Rule(17, '#', 14, '#', False),
-        # Rule(12, '#', 14, '#', False),
         Rule(13, 'y', 13, 'y', False),
         Rule(13, '0', 1, '0', False),
 
         Rule(14, '0', 14, '0', False),
         Rule(14, '1', 14, '1', False),
         Rule(14, 'y', 14, '1', False),
-        Rule(14, '$', 15, '$', False),
+        Rule(14, '$', 20, '$', False),
+
+        # 第二阶段，计算x*x*x*x
+        Rule(20, '0', 20, '0', False),
+        Rule(20, '1', 21, 'x', False),
+        Rule(21, '1', 21, '1', False),
+        Rule(21, '0', 22, '0', False),
+        # 处理终态
+        Rule(22, '#', 40, '#', True),
+        Rule(40, '0', 40, '0', True),
+        Rule(40, '1', 40, '1', True),
+        Rule(40, 'x', 41, '1', True),
+        Rule(41, '0', final_state, '0', True),
+        Rule(41, '$', final_state, '$', True),
+
+        Rule(22, '1', 23, 'a', False),
+        Rule(23, '1', 23, 'a', False),
+        Rule(23, '0', 24, '0', False),
+
+        Rule(24, '#', 25, '#', True),
+
+        Rule(24, '1', 25, '1',True),
+        Rule(25, '0', 26, '0',True),
+        Rule(26, '1', 26, '1',True),
+        Rule(26, 'a', 26, 'a',True),
+        Rule(26, '0', 27, '0',True),
+
+        Rule(27,'x',28,'0',True),
+
+        Rule(28,'x',28,'0',True),
+        Rule(28,'0',33,'0',False),
+        Rule(28,'$',33,'$',False),
+        Rule(33,'0',33,'0',False),
+        Rule(33,'a',34,'1',False),
+        Rule(34,'a',34,'1',False),
+        Rule(34,'1',34,'1',False),
+        Rule(34,'0',35,'0',True),
+        Rule(35,'0',35,'0',True),
+        Rule(35,'1',35,'1',True),
+        Rule(35,'$',20,'$',False),
+        # Rule(33,'1',21,'x',False),
+        # Rule(33, 'a', 33, '1', False),
+
+        Rule(27,'1',29,'1',True),
+        Rule(29,'1',29,'1',True),
+        Rule(29,'x',30,'x',False),
+        Rule(30,'1',31,'x',False),
+        Rule(31,'1',31,'1',False),
+        Rule(31,'0',32,'0',False),
+        Rule(32,'1',32,'1',False),
+        Rule(32,'a',32,'a1',False),
+        Rule(32,'0',24,'0',False),
+
+
 
 
     }
+
     def __init__(self):
         # self.tape=['#','0','0']
-        self.tape=['#']
-        self.current_state=0
-        self.cur=1
+        self.tape = ['#']
+        self.current_state = 0
+        self.cur = 1
 
     # 计算x的y次方
-    def caculate(self,x,y):
+    def caculate(self, x, y):
         # 初始化纸带
         for i in range(x):
             self.tape.append('1')
@@ -117,14 +169,14 @@ class Turing:
         self.__excute_rules()
 
     # 实现复制一个字符串
-    def copy_str(self,s):
+    def copy_str(self, s):
         for c in s:
             self.tape.append(c)
         self.tape.append('#')
         self.__excute_rules()
 
     # 实现两数相乘
-    def multiply(self,a,b):
+    def multiply(self, a, b):
         for i in range(a):
             self.tape.append('1')
         self.tape.append('0')
@@ -136,7 +188,7 @@ class Turing:
         self.__excute_rules()
 
     # 实现pow(x,y)
-    def pow_x_y(self,x,y):
+    def pow_x_y(self, x, y):
         for i in range(y):
             self.tape.append('1')
         self.tape.append('0')
@@ -148,59 +200,48 @@ class Turing:
 
     def __excute_rules(self):
         # 递归终止条件
-        if self.current_state==Turing.final_state:
+        if self.current_state == Turing.final_state:
             return
         self.show_tape()
-        old_tape=self.tape
         for rule in Turing.rules:
-            if self.current_state==rule.read_state \
-                and self.tape[self.cur]==rule.read_char:
+            if self.current_state == rule.read_state \
+                    and self.tape[self.cur] == rule.read_char:
                 # 展示执行的rule的信息
-                if self.cur==0:
+                if self.cur == 0:
                     print('↑')
-                    print('p'+str(self.current_state))
+                    print('p' + str(self.current_state))
                 else:
-                    print('\t'*self.cur+'↑')
-                    print('\t'*self.cur+'p' + str(self.current_state))
+                    print('\t' * self.cur + '↑')
+                    print('\t' * self.cur + 'p' + str(self.current_state))
 
-                print('执行了规则：',end='')
-                print('(p'+str(rule.read_state)+','+rule.read_char+')=(p'+str(rule.out_state)+','+rule.out_content+',',end='')
+                print('执行规则：', end='')
+                print('(p' + str(rule.read_state) + ',' + rule.read_char + ')=(p' + str(
+                    rule.out_state) + ',' + rule.out_content + ',', end='')
                 if rule.next_orientation:
                     print('Left)')
                 else:
                     print('Right)')
-                print('*'*100)
-                self.current_state=rule.out_state
+                print('*' * 100)
+                self.current_state = rule.out_state
                 del self.tape[self.cur]
                 for c in rule.out_content[::-1]:
-                    self.tape.insert(self.cur,c)
+                    self.tape.insert(self.cur, c)
                 if rule.next_orientation:
-                    self.cur-=1
+                    self.cur -= 1
                 else:
-                    self.cur+=1
+                    self.cur += 1
                 break
-        # 每当右侧的'#'边界符号被替换掉，立马补上一个新的
-        # if self.tape[-1]!='#':
-        #     self.tape.append('#')
-        # if self.tape!=old_tape:
-        #     self.show_tape()
         self.__excute_rules()
 
     # 展示纸带
     def show_tape(self):
         for e in self.tape:
-            # if e!='#':
-            #     print(e,end='\t')
             print(e, end='\t')
         print()
 
 
-if __name__=='__main__':
-    t=Turing()
+if __name__ == '__main__':
+    t = Turing()
     # t.multiply(2,3)
-    t.pow_x_y(2,3)
-
-
-
-
-
+    # @todo 未考虑0次方的问题，直接规定x,y属于正整数
+    t.pow_x_y(4, 2)
