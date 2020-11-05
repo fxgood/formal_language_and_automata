@@ -33,7 +33,6 @@ class NPDA:
                     self.rules.append(Rule('q^1', 'q^1', right_str, key, '#'))
                 else:
                     self.rules.append(Rule('q^1', 'q^1', right_str[0], key, right_str[1:]))
-        print('*' * 100)
         print('转换为PDA后，其转移规则如下：')
         self.show_rules()
         print('*' * 100)
@@ -94,9 +93,6 @@ class NPDA:
         else:
             print('串(' + target_str + ")识别失败,不属于该文法。")
 
-
-
-
 if __name__ == '__main__':
     case_1 = {
         'S': ['0', '0A', 'E'],
@@ -127,7 +123,6 @@ if __name__ == '__main__':
         'B': ['b'],
         'C': ['c']
     }
-
     npda = NPDA(case_4)
     npda.excute()
 
