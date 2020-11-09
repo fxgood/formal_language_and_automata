@@ -44,7 +44,7 @@ class NPDA:
     def __recognize(self, string, read_state, stack):
         # 递归终止条件，达到终态
         if read_state == 'q^2':
-            print('*' * 20 + '到达终态，匹配成功' + '*' * 20)
+            print('√ ' * 20 + '到达终态，匹配成功' + '√ ' * 20)
             return True
         # 递归终止条件，扫描完了tape还没到达终态
         if string == '':
@@ -52,7 +52,6 @@ class NPDA:
             return False
         now_string = string[:]
         print('当前剩余未读的串为：'+now_string)
-
         now_read_state = read_state
         matched_rules = []
         for rule in self.rules:
@@ -63,7 +62,7 @@ class NPDA:
         # 递归终止条件，没到达终态的情况下，没有任何规则可以匹配
         if not matched_rules:
             print('还未到达终态，就已没有任何规则可以匹配，匹配失败')
-            # print('*' * 100)
+            print('x ' * 50)
             return False
         result = False
         for rule in matched_rules:
@@ -73,19 +72,20 @@ class NPDA:
             print('转换前栈的状态:', end='')
             print(now_stack)
             del now_stack[0]
-            pattern = re.compile(r'\w\^1|\w')   # 已将#排除在外了
+            pattern = re.compile(r'\w\^1|\w')
             temp_lst = re.findall(pattern, rule.stack_top_replace_str)
             for e in temp_lst[::-1]:
                 now_stack.insert(0, e)
             print('转换后栈的状态:', end='')
             print(now_stack)
+            print('*' * 100)
             result = result or self.__recognize(string[1:], rule.out_state, now_stack)
         return result
 
     def recognize_language(self, string):
         return self.__recognize('#'+string+'#','q^0', self.stack)
 
-    def excute(self):
+    def execute(self):
         target_str = input('请输入一个字符串：')
         result = self.recognize_language(target_str)
         if result:
@@ -124,6 +124,6 @@ if __name__ == '__main__':
         'C': ['c']
     }
     npda = NPDA(case_4)
-    npda.excute()
+    npda.execute()
 
 

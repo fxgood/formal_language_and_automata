@@ -9,7 +9,11 @@ class Rule:
 
 
 class Turing:
-    final_state = 100
+    def __init__(self):
+        self.tape = ['#']
+        self.current_state = 0
+        self.cur = 1
+
     # 复制只有1组成的字符串
     # rules=[
     #     Rule(0,'1',0,'x',False),
@@ -46,7 +50,9 @@ class Turing:
     #     Rule(8,'#',final_state,'#',False),    # 20
     # ]
 
+    final_state = 100
     # 实现pow(x,y)
+
     rules = {
         # 第一阶段，将x^y转换为x*x*x*x
         Rule(0, '1', 0, '1', False),
@@ -152,12 +158,6 @@ class Turing:
 
     }
 
-    def __init__(self):
-        # self.tape=['#','0','0']
-        self.tape = ['#']
-        self.current_state = 0
-        self.cur = 1
-
     # 计算x的y次方
     def caculate(self, x, y):
         # 初始化纸带
@@ -202,31 +202,28 @@ class Turing:
     def __excute_rules(self):
         start_time=time.time()
         while(1):
-        # 递归终止条件
             if self.current_state == Turing.final_state:
                 break
-            # self.show_tape()
+            self.show_tape()
             for rule in Turing.rules:
                 if self.current_state == rule.read_state \
                         and self.tape[self.cur] == rule.read_char:
-
                     # 展示执行的rule的信息
-                    # if self.cur == 0:
-                    #     print('↑')
-                    #     print('p' + str(self.current_state))
-                    # else:
-                    #     print('\t' * self.cur + '↑')
-                    #     print('\t' * self.cur + 'p' + str(self.current_state))
-                    #
-                    # print('执行规则：', end='')
-                    # print('(p' + str(rule.read_state) + ',' + rule.read_char + ')=(p' + str(
-                    #     rule.out_state) + ',' + rule.out_content + ',', end='')
-                    # if rule.next_orientation:
-                    #     print('Left)')
-                    # else:
-                    #     print('Right)')
-                    # print('*' * 100)
+                    if self.cur == 0:
+                        print('↑')
+                        print('p' + str(self.current_state))
+                    else:
+                        print('\t' * self.cur + '↑')
+                        print('\t' * self.cur + 'p' + str(self.current_state))
 
+                    print('执行规则：', end='')
+                    print('(p' + str(rule.read_state) + ',' + rule.read_char + ')=(p' + str(
+                        rule.out_state) + ',' + rule.out_content + ',', end='')
+                    if rule.next_orientation:
+                        print('Left)')
+                    else:
+                        print('Right)')
+                    print('*' * 100)
                     self.current_state = rule.out_state
                     del self.tape[self.cur]
                     for c in rule.out_content[::-1]:
@@ -250,4 +247,4 @@ if __name__ == '__main__':
     t = Turing()
     # t.multiply(2,3)
     # @todo 未考虑0次方的问题，直接规定x,y属于正整数
-    t.pow_x_y(5, 5)
+    t.pow_x_y(2, 3)
