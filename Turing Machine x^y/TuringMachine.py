@@ -202,23 +202,22 @@ class Turing:
     def __excute_rules(self):
         start_time=time.time()
         while(1):
-            # while终止条件
+        # 递归终止条件
             if self.current_state == Turing.final_state:
-                self.show_tape()
                 break
-            #@todo 展示
             # self.show_tape()
             for rule in Turing.rules:
                 if self.current_state == rule.read_state \
                         and self.tape[self.cur] == rule.read_char:
+
                     # 展示执行的rule的信息
-                    # @todo 展示
                     # if self.cur == 0:
                     #     print('↑')
                     #     print('p' + str(self.current_state))
                     # else:
                     #     print('\t' * self.cur + '↑')
                     #     print('\t' * self.cur + 'p' + str(self.current_state))
+                    #
                     # print('执行规则：', end='')
                     # print('(p' + str(rule.read_state) + ',' + rule.read_char + ')=(p' + str(
                     #     rule.out_state) + ',' + rule.out_content + ',', end='')
@@ -237,10 +236,8 @@ class Turing:
                     else:
                         self.cur += 1
                     break
-
-        # @todo 展示
-        print("花费时间"+str(time.time()-start_time)+'秒')
-
+        self.show_tape()
+        print('共花费时间：'+str(time.time()-start_time))
 
     # 展示纸带
     def show_tape(self):
@@ -253,4 +250,4 @@ if __name__ == '__main__':
     t = Turing()
     # t.multiply(2,3)
     # @todo 未考虑0次方的问题，直接规定x,y属于正整数
-    t.pow_x_y(4,4)
+    t.pow_x_y(5, 5)
