@@ -62,7 +62,7 @@ class CleanTree:
         # print('*'*100)
         self.__cut_useless_nodes()
         # self.traverse()
-        # print('*' * 100)
+        # print('-' * 200)
         self.__find_useful_nodes(self.root_node)
         return self.__useful_nodes
 
@@ -161,7 +161,7 @@ class toGreibach:
     def to_greibach(self):
         print('输入的文法如下：')
         self.show_grammar()
-        print('*' * 100)
+        print('-' * 200)
         # 消除无用符号
         p = CleanTree()
         p.bulid_clean_tree(p.root_node, self.grammar)
@@ -177,17 +177,17 @@ class toGreibach:
             self.grammar.pop(e)
         print('消除无用符号后的文法如下：')
         self.show_grammar()
-        print('*' * 100)
+        print('-' * 200)
         # 消除空产生式
         self.__eliminate_empty_production()
         print('消除空产生式后的文法如下:')
         self.show_grammar()
-        print('*' * 100)
+        print('-' * 200)
         # 消除单一产生式
         self.__eliminate_single_production()
         print('消除单一产生式后:')
         self.show_grammar()
-        print('*' * 100)
+        print('-' * 200)
         # 将非终结符开头转化为非终结符开头
         while (1):
             finished = True
@@ -208,7 +208,7 @@ class toGreibach:
                 break
         print('消除右侧非终结符开头串后:')
         self.show_grammar()
-        print('*' * 100)
+        print('-' * 200)
         # 转化为Greibach范式
         key_to_add = {}
         for key in self.grammar:
@@ -225,7 +225,7 @@ class toGreibach:
         self.grammar.update(key_to_add)
         print('转换为Greibach范式后:')
         self.show_grammar()
-        print('*' * 100)
+        print('-' * 200)
 
     def show_grammar(self):
         for key in self.grammar:

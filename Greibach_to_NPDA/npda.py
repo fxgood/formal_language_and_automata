@@ -35,7 +35,7 @@ class NPDA:
                     self.rules.append(Rule('q^1', 'q^1', right_str[0], key, right_str[1:]))
         print('转换为PDA后，其转移规则如下：')
         self.show_rules()
-        print('*' * 100)
+        print('-' * 200)
 
     def show_rules(self):
         for e in self.rules:
@@ -78,7 +78,7 @@ class NPDA:
                 now_stack.insert(0, e)
             print('转换后栈的状态:', end='')
             print(now_stack)
-            print('*' * 100)
+            print('-' * 200)
             result = result or self.__recognize(string[1:], rule.out_state, now_stack)
         return result
 
