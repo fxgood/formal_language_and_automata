@@ -192,4 +192,4 @@ class Turing:
 
 if __name__ == '__main__':
     t = Turing()
-    t.pow_x_y(3, 3)
+    t.pow_x_y(2, 3)

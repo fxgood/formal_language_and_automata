@@ -44,7 +44,8 @@ class NPDA:
     def __recognize(self, string, read_state, stack):
         # 递归终止条件，达到终态
         if read_state == 'q^2':
-            print('√ ' * 20 + '到达终态，匹配成功' + '√ ' * 20)
+            print('* ' * 27 + '到达终态，匹配成功' + '* ' * 27)
+            print('-' * 200)
             return True
         # 递归终止条件，扫描完了tape还没到达终态
         if string == '':
@@ -61,8 +62,10 @@ class NPDA:
                 matched_rules.append(rule)
         # 递归终止条件，没到达终态的情况下，没有任何规则可以匹配
         if not matched_rules:
-            print('还未到达终态，就已没有任何规则可以匹配，匹配失败')
-            print('x ' * 50)
+            print('x ' * 20,end='')
+            print('还未到达终态，就已无规则可以匹配，此路径匹配失败',end='')
+            print('x ' * 20)
+            print('-' * 200)
             return False
         result = False
         for rule in matched_rules:
