@@ -39,7 +39,7 @@ class NPDA:
 
     def show_rules(self):
         for e in self.rules:
-            print('$(' + e.read_state + ',' + e.read_char + ',' + e.stack_top + ')=(' + e.out_state + ',' + e.stack_top_replace_str + ')')
+            print('(' + e.read_state + ',' + e.read_char + ',' + e.stack_top + ')=(' + e.out_state + ',' + e.stack_top_replace_str + ')')
 
     def __recognize(self, string, read_state, stack):
         # 递归终止条件，达到终态
