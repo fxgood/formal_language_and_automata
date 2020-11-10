@@ -123,7 +123,7 @@ if __name__ == '__main__':
         'B': ['b'],
         'C': ['c']
     }
-    npda = NPDA(case_4)
+    npda = NPDA(case_2)
     npda.execute()
 
 

@@ -4,8 +4,7 @@ class Node:
         self.char = char  # 存储节点内容
         self.children = []  # 指向子节点
         self.used_productions = []  # 使用过的产生式
-        # 为了实现从根结点到当前节点的通路上，p中的每个产生式最多只能出现一次
-        # 在每个节点上记录已经使用的产生式
+        # 为了实现从根结点到当前节点的通路上，p中的每个产生式最多只能出现一次,在每个节点上记录已经使用的产生式
 
 
 class Flag:
@@ -25,24 +24,11 @@ class CleanTree:
     def bulid_clean_tree(self, current_node, input_dict: dict):
         if not (current_node.char <= 'Z' and current_node.char >= 'A'):
             return
-        # print('当前处理的根节点为:' +current_node.char)
-        # if not current_node.used_productions:
-        #     print(current_node.char+'没有存储产生式')
-        # else:
-        #     print(current_node.char+'节点存储的产生式有:',end='')
-        #     for e in current_node.used_productions:
-        #         print(e,end='\t')
-        #     print()
         for right_str in input_dict[current_node.char]:
             # 如果此产生式在本条路径上没有使用过，才能生成节点
             temp_production = current_node.char + '->' + right_str
             if temp_production in current_node.used_productions:
-                # print(current_node.char+'已存产生式有:')
-                # for e in current_node.used_productions:
-                #     print(e,end='\t')
-                # print('\n'+'要生成的产生式为:'+temp_production+',冲突了')
                 continue
-            # print('当前处理的右侧产生式为:'+right_str)
             # 如果长度为1，则直接创建节点
             if len(right_str) == 1:
                 new_node = Node(right_str)
@@ -50,7 +36,6 @@ class CleanTree:
                 new_node.used_productions.append(temp_production)
                 new_node.father = current_node
                 current_node.children.append(new_node)
-                # print('生成'+current_node.char+'子节点：'+str(new_node.char))
             # 长度大于1，则创建空白节点
             else:
                 new_node = Node()
@@ -64,19 +49,12 @@ class CleanTree:
                         new_node_2.used_productions.append(temp_production)
                     new_node_2.father = new_node
                     new_node.children.append(new_node_2)
-                    # print('生成'+current_node.char+'的孙子节点：' + str(new_node_2.char))
-                    # self.bulid_clean_tree(new_node_2,input_dict) # 递归创建子树
         for child in current_node.children:
             if child.char is not None:
                 self.bulid_clean_tree(child, input_dict)
             else:
                 for grand_child in child.children:
                     self.bulid_clean_tree(grand_child, input_dict)
-
-        # print(current_node.char + "的孩子节点：",end='')
-        # for e in current_node.children:
-        #     print(e.char,end='\t')
-        # print()
 
     # 返回有用节点
     def return_useful_nodes(self):
@@ -283,5 +261,5 @@ if __name__ == '__main__':
     case_4 = {
         'S': ['aSbb', 'a']
     }
-    p = toGreibach(case_2)
+    p = toGreibach(case_1)
     p.to_greibach()
